@@ -54,6 +54,14 @@
 # include <sys/devpoll.h>
 #endif /* ! epoll && ! /dev/poll */
 
+#if defined(HAVE_KQUEUE) && !defined(TIMEVAL_TO_TIMESPEC)
+#define	TIMEVAL_TO_TIMESPEC(tv, ts)					\
+	do {								\
+		(ts)->tv_sec = (tv)->tv_sec;				\
+		(ts)->tv_nsec = (tv)->tv_usec * 1000;			\
+	} while (0)
+#endif
+
 #ifdef HAVE_TCPD
 int allow_severity = LOG_INFO;
 int deny_severity = LOG_NOTICE;
@@ -3019,7 +3027,8 @@ loop:
 					SLAP_EVENT_CLR_READ( i );
 					connection_read_activate( fd );
 				} else if ( !w ) {
-#ifdef HAVE_EPOLL
+#if defined(HAVE_EPOLL) && !defined(HAVE_KQUEUE)
+
 					/* Don't keep reporting the hangup
 					 */
 					if ( SLAP_SOCK_IS_ACTIVE( tid, fd )) {
