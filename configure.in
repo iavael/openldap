@@ -69,7 +69,6 @@ dnl Determine host platform
 dnl		we try not to use this for much
 AC_CANONICAL_TARGET([])
 
-AM_INIT_AUTOMAKE([$OL_PACKAGE],[$OL_VERSION], [no defines])dnl
 AC_SUBST(PACKAGE)dnl
 AC_SUBST(VERSION)dnl
 AC_DEFINE_UNQUOTED(OPENLDAP_PACKAGE,"$PACKAGE",Package)
@@ -975,6 +974,30 @@ if test "${ac_cv_header_sys_epoll_h}" = yes; then
 	exit (epfd == -1 ? 1 : 0);
 }]])],[AC_MSG_RESULT(yes)
 	AC_DEFINE(HAVE_EPOLL,1, [define if your system supports epoll])],[AC_MSG_RESULT(no)],[AC_MSG_RESULT(no)])
+fi
+
+dnl ----------------------------------------------------------------
+AC_CHECK_HEADERS( sys/event.h )
+if test "${ac_cv_header_sys_event_h}" = yes; then
+AC_MSG_CHECKING(for kqueue system call)
+AC_RUN_IFELSE([AC_LANG_SOURCE([[int main(int argc, char **argv)
+{
+	int kqfd = kqueue();
+	exit (kqfd == -1 ? 1 : 0);
+}]])],[AC_MSG_RESULT(yes)
+AC_DEFINE(HAVE_KQUEUE,1, [define if your system supports kqueue])],[AC_MSG_RESULT(no)],[AC_MSG_RESULT(no)])
+fi
+
+dnl ----------------------------------------------------------------
+AC_CHECK_HEADERS( sys/event.h )
+if test "${ac_cv_header_sys_event_h}" = yes; then
+AC_MSG_CHECKING(for kqueue system call)
+AC_RUN_IFELSE([AC_LANG_SOURCE([[int main(int argc, char **argv)
+{
+	int kqfd = kqueue();
+	exit (kqfd == -1 ? 1 : 0);
+}]])],[AC_MSG_RESULT(yes)
+AC_DEFINE(HAVE_KQUEUE,1, [define if your system supports kqueue])],[AC_MSG_RESULT(no)],[AC_MSG_RESULT(no)])
 fi
 
 dnl ----------------------------------------------------------------
