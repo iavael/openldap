@@ -72,6 +72,8 @@ lutil_detach( int debug, int do_close )
 		for ( i = 0; i < 5; i++ ) {
 #ifdef HAVE_THR
 			pid = fork1();
+#elif HAVE_KQUEUE
+			pid = rfork(RFPROC);
 #else
 			pid = fork();
 #endif
